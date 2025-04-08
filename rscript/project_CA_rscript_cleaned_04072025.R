@@ -281,6 +281,8 @@ vif(allreg)
 # Remove excluded collinear covariates from data
 CAacc=subset(CAacc,select = c(duration, Start_Lat, Distance.mi., Temperature.F., Humidity..., Pressure.in., Visibility.mi., Wind_Speed.mph., Precipitation.in., Amenity, Bump, Crossing, Give_Way, Junction, No_Exit, Railway, Station, Stop, Traffic_Calming, Traffic_Signal, Sunrise_Sunset, Astronomical_Twilight))
 
+
+
 # First try with duration variable without transformation
 # Use regsubsets to find best model using forward progression
 regsets=regsubsets(CAacc$duration~.,CAacc,method = "forward")
@@ -308,8 +310,8 @@ ggplot(reg, aes(x=fitted, y=residuals)) +
 # Check QQ Plot
 qqnorm(reg$residuals)
 qqline(reg$residuals)
-
 # QQ plot shows very heavy tails
+
 
 
 # Use log transformation for duration
@@ -350,11 +352,11 @@ CAacc$Distance.mi. = sqrt(CAacc$Distance.mi.)
 
 
 # Plot transformed Distance variable with duration
-ggplot(CAacc, aes(x=Distance.mi., y=duration)) +
+ggplot(CAacc, aes(x=Distance.mi., y=log(duration))) +
   geom_point() +
   labs(title = "Duration vs Square Root of Disruption Length",
        x = "Square root of Disruption length (mi)",
-       y = "Duration (s)")
+       y = "log(Duration) log (s)")
 
 # Test transformation of responding variable to log(Duration)
 sqregsets=regsubsets(log(CAacc$duration)~.,CAacc,method = "forward")
